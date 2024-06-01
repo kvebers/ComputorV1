@@ -24,6 +24,10 @@ int main(int argc, char **argv)
         std::string arg = argv[i];
         if (arg.find('=') != std::string::npos)
             mode = -1;
+        if (arg.find('-'))
+            last_symbol = -1;
+        else if (arg.find('+') || arg.find('='))
+            last_symbol = 1;
     }
     return 0;
 }
