@@ -21,6 +21,13 @@ std::ostream& operator<<(std::ostream& os, const Solver& solver) {
     return os;
 }
 
+
+float polynomSolver(Solver &solver)
+{
+    return 0.0;
+}
+
+
 int main(int argc, char **argv)
 {
 
@@ -46,17 +53,17 @@ int main(int argc, char **argv)
         else if (arg.find("X^2") != std::string::npos)
         {
             solver.xPow2 += mode * last_symbol * value;
-            value = 1.0;
+            value = 0.0;
         }
         else if (arg.find("X^1") != std::string::npos)
         {
             solver.xPow1 += mode * last_symbol * value;
-            value = 1.0;
+            value = 0.0;
         }
         else if (arg.find("X^0") != std::string::npos)
         {
             solver.xPow0 += mode * last_symbol * value;
-            value = 1.0;
+            value = 0.0;
         }
         else if (arg.find("X^") != std::string::npos)
         {
@@ -88,6 +95,7 @@ int main(int argc, char **argv)
         return 1;
     }
     std::cout << "Polynomial degree: " << degree << std::endl;
-    std::cout << solver << " = 0" <<std::endl;
+    std::cout << "Reduced Form: " << solver << " = 0" <<std::endl;
+    std::cout << "Result: " << polynomSolver(solver) << std::endl;
     return 0;
 }
