@@ -9,7 +9,15 @@ struct Solver {
 } solver;
 
 std::ostream& operator<<(std::ostream& os, const Solver& solver) {
-    os << "x^2: " << solver.xPow2 << ", x^1: " << solver.xPow1 << ", x^0: " << solver.xPow0;
+    os << solver.xPow2 << " * X^2";
+    if (solver.xPow1 >= 0)
+        os << " + " <<solver.xPow1 << " * X^1";
+    else
+        os << " - " << -solver.xPow1 << " * X^1";
+    if (solver.xPow0 >= 0)
+        os << " + " <<solver.xPow0 << " * X^0";
+    else
+        os << " - " << -solver.xPow0 << " * X^0";
     return os;
 }
 
@@ -19,15 +27,67 @@ int main(int argc, char **argv)
     Solver solver;
     int mode = 1;
     int last_symbol = 1;
+    float value = 0.0;
+    int degree = 0;
     for (int i = 1; i < argc; i++)
     {
         std::string arg = argv[i];
         if (arg.find('=') != std::string::npos)
             mode = -1;
-        if (arg.find('-'))
+        else if (arg.find("X^-") != std::string::npos)
+        {
+            std::cerr << "Negative exponent" << std::endl;
+            return 1;
+        }
+        else if (arg.find('-')  != std::string::npos)
             last_symbol = -1;
-        else if (arg.find('+') || arg.find('='))
+        else if (arg.find('+')  != std::string::npos || arg.find('=')  != std::string::npos)
             last_symbol = 1;
+        else if (arg.find("X^2") != std::string::npos)
+        {
+            solver.xPow2 += mode * last_symbol * value;
+            value = 1.0;
+        }
+        else if (arg.find("X^1") != std::string::npos)
+        {
+            solver.xPow1 += mode * last_symbol * value;
+            value = 1.0;
+        }
+        else if (arg.find("X^0") != std::string::npos)
+        {
+            solver.xPow0 += mode * last_symbol * value;
+            value = 1.0;
+        }
+        else if (arg.find("X^") != std::string::npos)
+        {
+            std::string exponentStr = arg.substr(arg.find("X^") + 2);
+            int tempDegree;
+            try {
+            tempDegree = std::stoi(exponentStr);
+            } catch (std::exception &e) {
+                std::cerr << "Invalid exponent" << std::endl;
+                exit (1);
+            }
+            if (tempDegree > degree)
+                degree = tempDegree;
+        }
+        else if (arg.find('*') != std::string::npos)
+            continue;
+        else {
+            try { value = std::stof(arg);} catch (std::exception &e) {}
+        }
     }
+    if (mode != -1) {
+        std::cerr << "No equation found" << std::endl;
+        return 1;
+    }
+    if (degree > 2)
+    {
+        std::cout << "Polynomial degree: " << degree << std::endl;
+        std::cerr << "The polynomial degree is strictly greater than 2, I can't solve." << std::endl;
+        return 1;
+    }
+    std::cout << "Polynomial degree: " << degree << std::endl;
+    std::cout << solver << " = 0" <<std::endl;
     return 0;
 }

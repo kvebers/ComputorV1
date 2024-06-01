@@ -13,4 +13,6 @@ fclean: clean
 	rm -f $(TARGET)
 	
 	
+re: fclean all
+
 .PHONY: all fclean clean
