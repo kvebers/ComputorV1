@@ -29,11 +29,24 @@ float simpleSolver(Solver &solver)
     return result;
 }
 
-float difficultSolver(Solver &solver) {
+void difficultSolver(Solver &solver) {
+    float delta = solver.xPow1 * solver.xPow1 - 4 * solver.xPow2 * solver.xPow0;
+    if (delta < 0)
+    {
+        std::cout << "Discriminant is negative, the two solutions are:" << std::endl;
+        std::cout << "(-" << solver.xPow1 << " + i * "<< sqrt(-delta) << ") / " << 2 * solver.xPow2 << std::endl;
+        std::cout << "(-" << solver.xPow1 << " - i * " << sqrt(-delta) << ") / " << 2 * solver.xPow2 << std::endl;
+        exit(1);
+    }
+    float x1 = (-solver.xPow1 + sqrt(delta)) / (2 * solver.xPow2);
+    float x2 = (-solver.xPow1 - sqrt(delta)) / (2 * solver.xPow2);
+    std::cout << "Discriminant is  positive, the solutions are:" << std::endl;
+    std::cout << x1 << std::endl;
+    std::cout << x2 << std::endl;
 }
 
 
-float polynomSolver(Solver &solver)
+void polynomSolver(Solver &solver)
 {
     if (solver.xPow0 == 0 && solver.xPow1 == 0 && solver.xPow2 == 0)
     {
@@ -47,11 +60,11 @@ float polynomSolver(Solver &solver)
     }
     if (solver.xPow2 == 0 && solver.xPow1 != 0)
     {
-        return simpleSolver(solver);
+        std::cout << "Single Polynom Result" << simpleSolver(solver) << std::endl;
     }
-    return difficultSolver(solver);
+    difficultSolver(solver);
+    exit (1);
 }
-
 
 int main(int argc, char **argv)
 {
@@ -121,6 +134,6 @@ int main(int argc, char **argv)
     }
     std::cout << "Polynomial degree: " << degree << std::endl;
     std::cout << "Reduced Form: " << solver << " = 0" <<std::endl;
-    std::cout << "Result: " << polynomSolver(solver) << std::endl;
+    polynomSolver(solver);
     return 0;
 }
