@@ -22,9 +22,34 @@ std::ostream& operator<<(std::ostream& os, const Solver& solver) {
 }
 
 
+
+float simpleSolver(Solver &solver)
+{
+    float result = -solver.xPow0 / solver.xPow1;
+    return result;
+}
+
+float difficultSolver(Solver &solver) {
+}
+
+
 float polynomSolver(Solver &solver)
 {
-    return 0.0;
+    if (solver.xPow0 == 0 && solver.xPow1 == 0 && solver.xPow2 == 0)
+    {
+        std::cout << "All real numbers are solutions" << std::endl;
+        exit(1);
+    }
+    if (solver.xPow2 == 0 && solver.xPow1 == 0 && solver.xPow0 != 0)
+    {
+        std::cout << "Math ain't mathing" << std::endl;
+        exit(1);
+    }
+    if (solver.xPow2 == 0 && solver.xPow1 != 0)
+    {
+        return simpleSolver(solver);
+    }
+    return difficultSolver(solver);
 }
 
 
@@ -34,7 +59,7 @@ int main(int argc, char **argv)
     Solver solver;
     int mode = 1;
     int last_symbol = 1;
-    float value = 0.0;
+    float value = 1.0;
     int degree = 0;
     for (int i = 1; i < argc; i++)
     {
@@ -53,17 +78,17 @@ int main(int argc, char **argv)
         else if (arg.find("X^2") != std::string::npos)
         {
             solver.xPow2 += mode * last_symbol * value;
-            value = 0.0;
+            value = 1.0;
         }
         else if (arg.find("X^1") != std::string::npos)
         {
             solver.xPow1 += mode * last_symbol * value;
-            value = 0.0;
+            value = 1.0;
         }
         else if (arg.find("X^0") != std::string::npos)
         {
             solver.xPow0 += mode * last_symbol * value;
-            value = 0.0;
+            value = 1.0;
         }
         else if (arg.find("X^") != std::string::npos)
         {
