@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 struct Solver {
     float xPow2;
@@ -38,7 +39,7 @@ void difficultSolver(Solver &solver) {
     }
     float x1 = (-solver.xPow1 + sqrt(delta)) / (2 * solver.xPow2);
     float x2 = (-solver.xPow1 - sqrt(delta)) / (2 * solver.xPow2);
-    std::cout << "Discriminant is  positive, the solutions are:" << std::endl;
+    std::cout << "Discriminant is positive or 0, the solutions are:" << std::endl;
     std::cout << x1 << std::endl;
     if (delta != 0)
         std::cout << x2 << std::endl;
@@ -69,12 +70,20 @@ void polynomSolver(Solver &solver)
 
 int main(int argc, char **argv)
 {
+    std::vector<std::string> args;
     if (argc == 2)
     {
-    std::stringstream ss(argv[1]);
-    std::string word;
-    while (ss >> word) {
-        std::cout << word << std::endl;
+        std::stringstream ss(argv[1]);
+        std::string word;
+        while (ss >> word) {
+            args.push_back(word);
+        }
+    }
+    else
+    {
+        for (int i = 1; i < argc; ++i)
+        {
+            args.push_back(argv[i]);
         }
     }
     Solver solver;
@@ -82,11 +91,18 @@ int main(int argc, char **argv)
     int last_symbol = 1;
     float value = 1.0;
     int degree = 0;
-    for (int i = 1; i < argc; i++)
+    for (unsigned long i = 0; i < args.size(); i++)
     {
-        std::string arg = argv[i];
+        std::string arg = args[i];
         if (arg.find('=') != std::string::npos)
+        {
+            if (mode == -1)
+            {
+                std::cerr << "Multiple equations found" << std::endl;
+                exit(1);
+            }
             mode = -1;
+        }
         else if (arg.find("X^-") != std::string::npos)
         {
             std::cerr << "Negative exponent" << std::endl;
