@@ -1,10 +1,10 @@
 #include <iostream>
+#include <sstream>
 
 struct Solver {
     float xPow2;
     float xPow1;
     float xPow0;
-
     Solver() : xPow2(0), xPow1(0), xPow0(0) {}
 } solver;
 
@@ -21,8 +21,6 @@ std::ostream& operator<<(std::ostream& os, const Solver& solver) {
     return os;
 }
 
-
-
 float simpleSolver(Solver &solver)
 {
     float result = -solver.xPow0 / solver.xPow1;
@@ -34,15 +32,16 @@ void difficultSolver(Solver &solver) {
     if (delta < 0)
     {
         std::cout << "Discriminant is negative, the two solutions are:" << std::endl;
-        std::cout << "(-" << solver.xPow1 << " + i * "<< sqrt(-delta) << ") / " << 2 * solver.xPow2 << std::endl;
-        std::cout << "(-" << solver.xPow1 << " - i * " << sqrt(-delta) << ") / " << 2 * solver.xPow2 << std::endl;
+        std::cout << "(-" << solver.xPow1 /  2 / solver.xPow2 << " + i * "<< sqrt(-delta) /  2 / solver.xPow2 << std::endl;
+        std::cout << "(-" << solver.xPow1 /  2 / solver.xPow2 << " - i * " << sqrt(-delta)  / 2 / solver.xPow2 << std::endl;
         exit(1);
     }
     float x1 = (-solver.xPow1 + sqrt(delta)) / (2 * solver.xPow2);
     float x2 = (-solver.xPow1 - sqrt(delta)) / (2 * solver.xPow2);
     std::cout << "Discriminant is  positive, the solutions are:" << std::endl;
     std::cout << x1 << std::endl;
-    std::cout << x2 << std::endl;
+    if (delta != 0)
+        std::cout << x2 << std::endl;
 }
 
 
@@ -60,15 +59,24 @@ void polynomSolver(Solver &solver)
     }
     if (solver.xPow2 == 0 && solver.xPow1 != 0)
     {
-        std::cout << "Single Polynom Result" << simpleSolver(solver) << std::endl;
+        std::cout << "Single Polynom Result: " << simpleSolver(solver) << std::endl;
+        exit(1);
     }
     difficultSolver(solver);
     exit (1);
 }
 
+
 int main(int argc, char **argv)
 {
-
+    if (argc == 2)
+    {
+    std::stringstream ss(argv[1]);
+    std::string word;
+    while (ss >> word) {
+        std::cout << word << std::endl;
+        }
+    }
     Solver solver;
     int mode = 1;
     int last_symbol = 1;
@@ -92,11 +100,15 @@ int main(int argc, char **argv)
         {
             solver.xPow2 += mode * last_symbol * value;
             value = 1.0;
+            if (degree < 2)
+                degree = 2;
         }
         else if (arg.find("X^1") != std::string::npos)
         {
             solver.xPow1 += mode * last_symbol * value;
             value = 1.0;
+            if (degree < 1)
+                degree = 1;
         }
         else if (arg.find("X^0") != std::string::npos)
         {
