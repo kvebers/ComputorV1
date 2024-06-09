@@ -55,7 +55,7 @@ void polynomSolver(Solver &solver)
     }
     if (solver.xPow2 == 0 && solver.xPow1 == 0 && solver.xPow0 != 0)
     {
-        std::cout << "Math ain't mathing" << std::endl;
+        std::cout << "Something can't be nothing" << std::endl;
         exit(1);
     }
     if (solver.xPow2 == 0 && solver.xPow1 != 0)
